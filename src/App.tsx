@@ -31,17 +31,24 @@ function App() {
 
   return (
     //画面を中央に表示するための囲みdiv
-    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh',
+      backgroundColor: '#f5f5f5'
+    }
+    }>
       {/*svgの表示エリア svgは、図形を描くための特別なHTMLタグです。*/}
       <svg width="300" height="300" viewBox="0 0 300 300">
         {/* 時計の外枠 */}
         <circle cx="150" cy="150" r="140" fill="white" stroke="black" strokeWidth="4" />
         {/* 時針 */}
         <line
-          x1="150" y1="150"
-          x2="150" y2="80"
-          stroke="black" strokeWidth="6"
-          transform={`rotate(${hourAngle}, 150, 150)`}
+          x1="160" y1="160"
+          x2="160" y2="100"
+          stroke="#333" strokeWidth="6" strokeLinecap="round"
+          transform={`rotate(${hourAngle}, 160, 160)`}
         />
         {/* 分針　*/}
         <line x1="150" y1="150" x2="150" y2="50" stroke="black" strokeWidth="4"
@@ -49,13 +56,45 @@ function App() {
         {/* 秒針 */}
         <line x1="150" y1="150" x2="150" y2="40" stroke="red" strokeWidth="2"
           transform={`rotate(${secondAngle}, 150, 150)`} />
-          {/*メモリを追加*/}
-          {Array.from({ length: 12 }).map((_, i) => {
-            const angle = i * 30; //12個を360°で等分
-            const x = 150 + 120 * Math.sin((angle * Math.PI) / 180);
-            const y = 150 - 120 * Math.cos((angle * Math.PI) / 180);
-            return <circle key = {i} cx = {x} cy = {y} r="4" fill="black" />;
-          })}
+        {/*メモリを追加*/}
+        {Array.from({ length: 60 }).map((_, i) => {
+          const angle = i * 6;
+          const isHour = i % 5 === 0;
+          const innerR = isHour ? 130 : 138;
+          const x1 = 160 + innerR * Math.sin((angle * Math.PI) / 180);
+          const y1 = 160 - innerR * Math.cos((angle * Math.PI) / 180);
+          const x2 = 160 + 145 * Math.sin((angle * Math.PI) / 180);
+          const y2 = 160 - 145 * Math.cos((angle * Math.PI) / 180);
+          return (
+            <line
+              key={i}
+              x1={x1} y1={y1}
+              x2={x2} y2={y2}
+              stroke={isHour ? '#333' : '#ccc'}
+              strokeWidth={isHour ? 2 : 1}
+            />
+          );
+        })}
+        {/* 数字追加 */}
+        {[12, 3, 6, 9].map((num) => {
+          const angle = num * 30;
+          const x = 150 + 95 * Math.sin((angle * Math.PI) / 180);
+          const y = 150 - 95 * Math.cos((angle * Math.PI) / 180);
+          return (
+            <text
+              key={num}
+              x={x}
+              y={y}
+              textAnchor="middle"
+              dominantBaseline="central"
+              fontSize="18"
+              fontWeight="bold"
+
+            >
+              {num}
+            </text>
+          )
+        })}
         <circle cx="150" cy="150" r="5" fill="black" />
       </svg>
 
